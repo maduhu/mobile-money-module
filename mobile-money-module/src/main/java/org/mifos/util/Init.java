@@ -17,11 +17,11 @@ public class Init {
         return BASE_URL;
     }
 
-    public static String getMomoSavingsUrl() {
+    public static String getMomoDepositUrl() {
         return momoDepositUrl;
     }
 
-    public void setMomoSavingsUrl(String momoSavingsUrl) {
+    public void setMomoDepositUrl(String momoSavingsUrl) {
         this.momoDepositUrl = momoSavingsUrl;
     }
 
