@@ -9,7 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 
 @SuppressWarnings("unused")
 @Transactional
-public interface ConfigurationsRepository extends CrudRepository<Configurations, Long>{}
+public interface ConfigurationsRepository extends CrudRepository<Configurations, Long>{
+
+    // Query to get the current default configuration
+    @Query("SELECT CONFIG FROM CONFIGURATIONS WHERE default=1")
+    public List<Configurations> findByDefaultId(@Param("default") int defaultId);
+}
