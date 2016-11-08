@@ -3,6 +3,8 @@ package org.mifos.externalApi;
 /**
  * Created by daniel on 11/2/16.
  */
+import org.mifos.exceptions.RequestFailureException;
+import org.mifos.exceptions.SavingToDatabaseException;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,10 +36,12 @@ public class Savings {
     public
     @ResponseBody
     ResponseEntity<String> saveMoney(
-            @RequestParam(value="phone", required=true)long phoneNumber,
-            @RequestParam(value="amount", required=true) long amount,
+            @RequestParam(value="phone", required=true)int phoneNumber,
+            @RequestParam(value="amount", required=true) int amount,
             @RequestParam(value="clientId", required=true)int clientID,
             @RequestParam(value="accountId", required=true)int accountID){
+
+        String results = "Savings success.";
 
 		/*
 		 * TODO: make this generic. So this can be changed from front end application
@@ -56,14 +60,19 @@ public class Savings {
         try{
             RestTemplate restTemplate = new RestTemplate();
             String resp = restTemplate.getForObject(url, String.class, params);
+
+            /*
+             * TODO: This should be changed to a logger
+             */
             System.out.println("Savings result: " + resp);
 
-			/*
-			 * TODO: change this to a throw statement to throw an exception
-			 */
             if(resp.contains("error")){
+                /*
+                 * TODO: This should be changed to a logger
+                 */
                 System.out.println("Error making request to Mobile money api.");
-                return new ResponseEntity<String>("\"Savings failure\"", HttpStatus.EXPECTATION_FAILED);
+                //return new ResponseEntity<String>("\"Savings failure\"", HttpStatus.EXPECTATION_FAILED);
+                throw new RequestFailureException(resp.toString());
             }
 
 			/*
@@ -83,13 +92,21 @@ public class Savings {
             try{
                 transactionRepo.save(trans);
             } catch(Exception ex){
+                /*
+                 * TODO: This should be changed to a logger
+                 */
                 System.out.println("Saving to database error in savings: " + ex.getMessage());
-                return new ResponseEntity<String>("\"Error saving to database in savings\"", HttpStatus.INTERNAL_SERVER_ERROR);
+                //return new ResponseEntity<String>("\"Error saving to database in savings\"", HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new SavingToDatabaseException(ex.getMessage());
             }
-            return new ResponseEntity<String>("\"Savings success\"", HttpStatus.OK);
+            return new ResponseEntity<String>(results, HttpStatus.OK);
         } catch(Exception ex){
+            /*
+             * TODO: This should be changed to a logger
+             */
             System.out.println("Error making request to Mobile money api.\nErrorMessage: " + ex.getMessage());
-            return new ResponseEntity<String>("\"Savings failure\"", HttpStatus.INTERNAL_SERVER_ERROR);
+            //return new ResponseEntity<String>("\"Savings failure\"", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RequestFailureException(ex.getMessage());
         }
     }
 

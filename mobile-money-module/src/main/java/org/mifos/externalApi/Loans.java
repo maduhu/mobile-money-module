@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mifos.exceptions.RequestFailureException;
+import org.mifos.exceptions.SavingToDatabaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,6 +40,8 @@ public class Loans {
             @RequestParam(value="clientId", required=true)int clientID,
             @RequestParam(value="accountId", required=true)int accountID){
 
+        String results = "Loans success.";
+
         final String url = "http://api.furthermarket.com/FM/MTN/MoMo/Requestpayment?MyaccountID={accountNo}&CustomerPhonenumber=237{phone}&Amount={amount}&ItemDesignation=%22trans%22&ItemDescription=%22%22";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -56,8 +60,12 @@ public class Loans {
 			 * error handling: rudimentary but necessary
 			 */
             if(response.contains("error")){
+                /*
+                 * TODO: This should be changed to a logger
+                 */
                 System.out.println("Error making request to Mobile money api.");
-                return new ResponseEntity<String>("\"Loan repayments failure\"", HttpStatus.EXPECTATION_FAILED);
+                // return new ResponseEntity<String>("\"Loan repayments failure\"", HttpStatus.EXPECTATION_FAILED);
+                throw new RequestFailureException(response);
             }
 
 			/*
@@ -78,13 +86,21 @@ public class Loans {
             try{
                 transactionsRepo.save(trans);
             } catch(Exception ex){
+                /*
+                 * TODO: This should be changed to a logger
+                 */
                 System.out.println("Saving to database error in repayments: " + ex.getMessage());
-                return new ResponseEntity<String>("\"Error saving to database in repayments\"", HttpStatus.INTERNAL_SERVER_ERROR);
+                //return new ResponseEntity<String>("\"Error saving to database in repayments\"", HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new SavingToDatabaseException(ex.getMessage());
             }
-            return new ResponseEntity<String>("\"Repayments success\"", HttpStatus.OK);
+            return new ResponseEntity<String>(results, HttpStatus.OK);
         } catch(Exception ex){
+            /*
+             * TODO: This should be changed to a logger
+             */
             System.out.println("Error making request to Mobile money api.\nErrorMessage: " + ex.getMessage());
-            return new ResponseEntity<String>("\"Loan repayments failure\"", HttpStatus.INTERNAL_SERVER_ERROR);
+            //return new ResponseEntity<String>("\"Loan repayments failure\"", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RequestFailureException(ex.getMessage());
         }
     }
 
