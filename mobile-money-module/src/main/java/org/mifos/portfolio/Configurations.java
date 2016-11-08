@@ -45,8 +45,15 @@ public class Configurations {
     @Column(name="Parameters")
     private String parameters;
 
+    @Column(name="default")
+    private int defaultId;
+
 
     // Getter and setters
+    public int getDefaultId() { return defaultId; }
+
+    public void setDefaultId(int defaultId) { this.defaultId = defaultId; }
+
     public int getPhone() {
         return phone;
     }

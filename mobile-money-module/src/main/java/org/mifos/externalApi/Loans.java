@@ -29,7 +29,7 @@ public class Loans {
 
     @SuppressWarnings("unused")
     @CrossOrigin
-    @RequestMapping(value="/api/v1/loans", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/mobile_mo/api/v1/loans", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
     public
     @ResponseBody
     ResponseEntity<String> repayLaon(

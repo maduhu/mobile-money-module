@@ -12,42 +12,31 @@ public class Init {
     protected static String momoDepositUrl = "";
     protected static String momoWithdrawUrl = "";
 
-
     public String getBaseUrl() {
         return BASE_URL;
     }
-
     public static String getMomoDepositUrl() {
         return momoDepositUrl;
     }
-
     public void setMomoDepositUrl(String momoSavingsUrl) {
         this.momoDepositUrl = momoSavingsUrl;
     }
-
-    public static String getMomoWithdrawalsUrl() {
-        return momoWithdrawUrl;
-    }
-
+    public static String getMomoWithdrawalsUrl() { return momoWithdrawUrl; }
     public void setMomoWithdrawalsUrl(String momoWithdrawalsUrl) {
         this.momoWithdrawUrl = momoWithdrawalsUrl;
     }
-
     public void setBaseUrl(String baseUrl) {
         BASE_URL = baseUrl;
     }
-
     public String getSavingsUrl() {
         return SAVINGS_URL;
     }
-
     public void setSavingsUrl(String savingsUrl) {
         SAVINGS_URL = savingsUrl;
     }
     public String getWithdrawalsUrl() {
         return WITHDRAWALS_URL;
     }
-
     public void setWithdrawalsUrl(String withDrawalsUrl) {
         WITHDRAWALS_URL = withDrawalsUrl;
     }
