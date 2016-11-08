@@ -59,7 +59,7 @@ angular.module('mobileMoneyApp')
 	/* mobile money engine processes */
 	.factory('mobileMoneyFactory', ['$http', function($http){
 		
-		var baseUrl = "http://localhost:8090/api/v1/";
+		var baseUrl = "http://localhost:8090/mobile_mo/api/v1/";
 		var mobileMoneyFactory = {};
 		
 		mobileMoneyFactory.transactions = function(phone, amount, clientId, accountId, val){
@@ -87,7 +87,7 @@ angular.module('mobileMoneyApp')
 	/* utilities for the mobile money engine*/
 	.factory('utilFactory', ['$http', function($http){
 		
-		var baseUrl = "http://localhost:8090/api/v1/transactions";
+		var baseUrl = "http://localhost:8090/mobile_mo/api/v1/transactions";
 		var utilFactory = {};
 		
 		utilFactory.getAllTransactions = function(){
@@ -95,7 +95,7 @@ angular.module('mobileMoneyApp')
 		};
 		
 		utilFactory.initTransactions = function(staff, office){
-			var requestUrl = "http://localhost:8090/api/v1/create?staff=" + staff + "&office=" + office; 
+			var requestUrl = "http://localhost:8090/mobile_mo/api/v1/create?staff=" + staff + "&office=" + office; 
 			return $http.get(requestUrl);
 		};
 		
