@@ -4,6 +4,7 @@ package org.mifos.externalApi;
  * Created by daniel on 11/5/16.
  */
 import org.hibernate.jpa.criteria.predicate.IsEmptyPredicate;
+import org.mifos.exceptions.InvalidParameterException;
 import org.mifos.repos.ConfigurationsRepository;
 import org.mifos.portfolio.Configurations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +65,10 @@ public class ConfigurationsApi {
     ResponseEntity<Iterable<Configurations>> getDefaultConfigurations(
             @RequestParam(value="command", required=true)String command
     ){
-        /*
-         * TODO: throw exception here if command is not correct
-         */
+        if(String.valueOf(command) == null){
+            throw new InvalidParameterException();
+        }
+
         if (command.equals("getDefaultConfiguration")) {
 
             Iterable<Configurations> config;
@@ -82,11 +84,8 @@ public class ConfigurationsApi {
             configs = configuartionsRepo.findAll();
             return new ResponseEntity<Iterable<Configurations>>(configs, HttpStatus.OK);
         } else {
-            /*
-                TODO: exception throwing here
-             */
+            throw new InvalidParameterException();
         }
-        return null;
     }
 
     @CrossOrigin
@@ -97,9 +96,10 @@ public class ConfigurationsApi {
             @RequestParam(value="command", required=true)String command,
             @RequestParam(value="id", required = false)Long configId
     ){
-        /*
-         * TODO: throw exception here if command is not correct
-         */
+        if(String.valueOf(command) == null || String.valueOf(configId) == null){
+            throw new InvalidParameterException();
+        }
+
         if(command.equals("delete")){
             if (configId.equals("")) {
 

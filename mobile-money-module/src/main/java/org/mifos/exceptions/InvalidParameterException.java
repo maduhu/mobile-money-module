@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class InvalidParameterException extends RuntimeException{
-    public InvalidParameterException(String string){
-        super("Invalid parameter provided: " + string);
+    public InvalidParameterException(){
+        super("Invalid parameter provided. Please recheck the list of parameters provided.");
     }
 }

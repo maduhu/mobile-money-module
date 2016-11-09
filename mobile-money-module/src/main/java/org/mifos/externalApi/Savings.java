@@ -3,6 +3,7 @@ package org.mifos.externalApi;
 /**
  * Created by daniel on 11/2/16.
  */
+import org.mifos.exceptions.InvalidParameterException;
 import org.mifos.exceptions.RequestFailureException;
 import org.mifos.exceptions.SavingToDatabaseException;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +43,14 @@ public class Savings {
             @RequestParam(value="accountId", required=true)int accountID){
 
         String results = "Savings success.";
+
+        if(String.valueOf(accountID) == null || String.valueOf(phoneNumber) == null || String.valueOf(amount) == null
+                || String.valueOf(clientID) == null){
+            /*
+             * TODO: This should be changed to a logger
+             */
+            throw new InvalidParameterException();
+        }
 
 		/*
 		 * TODO: make this generic. So this can be changed from front end application

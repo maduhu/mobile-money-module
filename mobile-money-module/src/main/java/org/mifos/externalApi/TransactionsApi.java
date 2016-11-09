@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mifos.exceptions.InvalidParameterException;
+import org.mifos.exceptions.RequestFailureException;
+import org.mifos.exceptions.SavingToDatabaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,6 +41,14 @@ public class TransactionsApi {
             @RequestParam(value="clientId", required=true)int clientID,
             @RequestParam(value="accountId", required=true)int accountID){
 
+        if(String.valueOf(accountID) == null || String.valueOf(phoneNumber) == null || String.valueOf(amount) == null
+                || String.valueOf(clientID) == null){
+            /*
+             * TODO: This should be changed to a logger
+             */
+            throw new InvalidParameterException();
+        }
+
         //final String url = "http://api.furthermarket.com/FM/MTN/MoMo/Requestpayment?MyaccountID={accountNo}&CustomerPhonenumber=237{phone}&Amount={amount}&ItemDesignation=%22trans%22&ItemDescription=%22%22";
 
         final String url = Init.getMomoWithdrawalsUrl();
@@ -59,7 +70,8 @@ public class TransactionsApi {
 			 */
             if(response.contains("error")){
                 System.out.println("Error making request to Mobile money api.");
-                return new ResponseEntity<String>("\"Loan repayments failure\"", HttpStatus.EXPECTATION_FAILED);
+                //return new ResponseEntity<String>("\"Loan repayments failure\"", HttpStatus.EXPECTATION_FAILED);
+                throw new RequestFailureException(response);
             }
 
 			/*
@@ -81,12 +93,14 @@ public class TransactionsApi {
                 transactionRepo.save(trans);
             } catch(Exception ex){
                 System.out.println("Saving to database error in repayments: " + ex.getMessage());
-                return new ResponseEntity<String>("\"Error saving to database in repayments\"", HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new SavingToDatabaseException(ex.getMessage());
+                //return new ResponseEntity<String>("\"Error saving to database in repayments\"", HttpStatus.INTERNAL_SERVER_ERROR);
             }
             return new ResponseEntity<String>("\"Repayments success\"", HttpStatus.OK);
         } catch(Exception ex){
             System.out.println("Error making request to Mobile money api.\nErrorMessage: " + ex.getMessage());
-            return new ResponseEntity<String>("\"Loan repayments failure\"", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RequestFailureException(ex.getMessage());
+            //return new ResponseEntity<String>("\"Loan repayments failure\"", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
